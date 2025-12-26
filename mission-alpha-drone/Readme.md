@@ -2,6 +2,7 @@
 
 ## Overview
 A "Biometric Lock" minigame where users mimic a sequence of numbers using hand gestures. The system uses a React frontend and a Python backend following the Google Cloud ADK Streaming Agent pattern.
+![Gameplay](./img/gameplay.png)
 
 ## Prerequisites
 - Node.js (Frontend)
@@ -33,20 +34,13 @@ npm run dev
 Open http://localhost:5173 to play.
 ```
 ## Project Structure
-- backend/app/main.py
-: FastAPI server using google.adk for the Runner implementation.
-- backend/app/biometric_agent/agent.py
-: Agent definition.
-- frontend/src/BiometricLock.jsx
-: Game logic & HUD.
-Dependencies: Requires google-genai and google-adk (or equivalent internal package).
+- backend/app/main.py: FastAPI server using google.adk for the Runner implementation.
+- backend/app/biometric_agent/agent.py: Agent definition.
+- frontend/src/BiometricLock.jsx: Game logic & HUD.
+- Dependencies: Requires google-genai and google-adk (or equivalent internal package).
 
-##Configuration
-Update 
-`.env`
- in 
-`backend/app/.env`
- with your project details:
+## Configuration
+Update `.env` in `backend/app/.env` with your project details:
 
 ```properties
 GOOGLE_CLOUD_PROJECT=your-project-id
@@ -56,11 +50,8 @@ GOOGLE_GENAI_USE_VERTEXAI=True
 
 **Authentication**: You must have credentials configured.
 - Local Development: Run `gcloud auth application-default login`.
-- Service Account: Set `GOOGLE_APPLICATION_CREDENTIALS=/path/to/key.json` in 
-.env
-.
-
-- The agent uses model gemini-2.0-flash-exp by default.
+- Service Account: Set `GOOGLE_APPLICATION_CREDENTIALS=/path/to/key.json` in `.env` .
+- The agent uses model `gemini-live-2.5-flash-preview-native-audio-09-2025` by default.
 
 ## Features
 - Multimodal Input: Processes live video (16kHz PCM audio + JPEG frames) simultaneously.
