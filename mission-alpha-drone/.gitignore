@@ -1,0 +1,29 @@
+# System
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node.js
+node_modules/
+dist/
+build/
+.npm
+.yarn
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+*.spec
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+
+# Application
+*.log
