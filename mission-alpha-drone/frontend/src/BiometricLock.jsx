@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGeminiSocket } from './useGeminiSocket';
 
 const SEQUENCE_LENGTH = 4;
-const ROUND_TIME = 60;
+const ROUND_TIME = 65;
 
 const generateSequence = () => {
     const nums = new Set();
@@ -82,9 +82,36 @@ export default function BiometricLock() {
         }
     }, [lastMessage, status, sequence, inputProgress]);
 
+    const [permissionDenied, setPermissionDenied] = useState(false);
+    const [initiationWarning, setInitiationWarning] = useState(false);
+
+    const handleInitiateOverride = async () => {
+        try {
+            // Request Camera Permission immediately
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+            // If we get here, permission granted. 
+            // Stop this temporary stream so startStream() can get a fresh one later (or we could pass it, but simpler to just release)
+            stream.getTracks().forEach(track => track.stop());
+
+            setPermissionDenied(false);
+
+            // Show Warning/Startup sequence
+            setInitiationWarning(true);
+            startRound(); // Start camera/game immediately behind overlay
+
+            setTimeout(() => {
+                setInitiationWarning(false);
+            }, 5000);
+        } catch (err) {
+            console.error("Camera permission denied:", err);
+            setPermissionDenied(true);
+        }
+    };
+
     return (
         <div className="relative w-full h-screen bg-black overflow-hidden font-mono text-neon-cyan select-none">
-            {/* Background Video */}
+            {/* ... (background video remains same) ... */}
             <video
                 ref={videoRef}
                 muted
@@ -97,21 +124,57 @@ export default function BiometricLock() {
             {/* Scanlines Overlay - Disable on end game for clear view */}
             {status === 'SCANNING' && <div className="scanlines z-10"></div>}
 
+            {/* Permission Denied Overlay */}
+            {permissionDenied && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md animate-fade-in">
+                    <div className="text-center border border-red-500 p-10 rounded bg-red-950/20 box-shadow-xl">
+                        <h1 className="text-4xl font-bold text-red-500 mb-4 animate-pulse">ACCESS DENIED</h1>
+                        <p className="text-xl text-red-300 mb-8">BIOMETRIC SENSOR OFFLINE</p>
+                        <p className="text-sm text-gray-400 mb-8">Camera access required for neural handshake.</p>
+                        <button
+                            onClick={() => setPermissionDenied(false)}
+                            className="px-6 py-2 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+                        >
+                            ACKNOWLEDGE
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Initialization Warning Overlay */}
+            {initiationWarning && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
+                    <div className="text-center max-w-2xl px-8">
+                        <h1 className="text-4xl font-bold text-yellow-500 mb-6 animate-pulse">INITIALIZING NEURAL LINK...</h1>
+                        <div className="text-xl text-yellow-200/80 mb-8 space-y-4 font-mono">
+                            <p>ESTABLISHING SECURE CHANNEL.</p>
+                            <p className="border-t border-b border-yellow-500/30 py-4">
+                                WAIT FOR AUDIO CONFIRMATION:<br />
+                                <span className="text-white font-bold">"Biometric Scanner Online"</span>
+                            </p>
+                        </div>
+                        <div className="w-full h-1 bg-yellow-900 rounded-full overflow-hidden">
+                            <div className="h-full bg-yellow-400 animate-[width_3s_linear_forwards]" style={{ width: '0%' }}></div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Success/Fail Overlays with Dynamic Effects */}
             {status === 'SUCCESS' && (
                 <div className="absolute inset-0 z-30 flex items-center justify-center bg-green-900/40 backdrop-blur-sm animate-fade-in">
                     <div className="text-center">
                         <h1 className="text-8xl font-black text-white drop-shadow-[0_0_30px_rgba(0,255,0,0.8)] animate-bounce">
-                            ACCESS GRANTED
+                            NEURAL SYNC COMPLETE
                         </h1>
                         <p className="text-2xl text-neon-green mt-4 tracking-[1em] animate-pulse">
-                            SYSTEM UNLOCKED
+                            DRIFT STABLE // FLEET ACTIVE
                         </p>
                         <button
-                            onClick={startRound}
+                            onClick={handleInitiateOverride}
                             className="mt-12 px-8 py-3 bg-black/80 border border-neon-green text-neon-green hover:bg-neon-green hover:text-black transition-all"
                         >
-                            REBOOT SYSTEM
+                            RE-SYNC
                         </button>
                     </div>
                     {/* Confetti-like particles (simple CSS circles) */}
@@ -139,7 +202,7 @@ export default function BiometricLock() {
                             Time Expired / Protocol Breach
                         </p>
                         <button
-                            onClick={startRound}
+                            onClick={handleInitiateOverride}
                             className="mt-12 px-8 py-3 bg-black/80 border border-red-500 text-red-500 hover:bg-red-500 hover:text-black transition-all"
                         >
                             RETRY SEQUENCE
@@ -154,14 +217,18 @@ export default function BiometricLock() {
                 {/* Header */}
                 <div className="w-full max-w-4xl flex justify-between items-center border-b-2 border-neon-cyan/50 pb-4 bg-black/60 backdrop-blur-sm p-6 rounded-t-xl">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-widest text-glow">SECURITY PROTOCOL: LEVEL 5</h1>
+                        <h2 className="text-4xl font-black text-white tracking-[0.2em] mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">MISSION ALPHA</h2>
+                        <h1 className="text-xl font-bold tracking-widest text-glow text-neon-cyan">SECURITY PROTOCOL: LEVEL 5</h1>
                         <div className="text-xs text-neon-cyan/70">Bio-Signature Required</div>
                     </div>
                     <div className={`px-4 py-2 text-xl font-bold border ${Math.random() > 0.5 ? 'animate-pulse' : ''} ${status === 'IDLE' ? 'border-red-500 text-red-500' :
-                        status === 'SCANNING' ? 'border-yellow-400 text-yellow-400' : ''
+                        status === 'SCANNING' && socketStatus === 'CONNECTED' ? 'border-yellow-400 text-yellow-400' :
+                            'border-red-600 text-red-600'
                         }`}>
-                        {status === 'IDLE' && 'LOCKED'}
-                        {status === 'SCANNING' && 'OVERRIDE IN PROGRESS'}
+                        {status === 'IDLE' && 'DISSOCIATED'}
+                        {status === 'SCANNING' && (
+                            socketStatus === 'CONNECTED' ? 'NEURAL SYNC INITIALIZED' : 'NEURAL LINK DROPPED // OFFLINE'
+                        )}
                     </div>
                 </div>
 
@@ -170,10 +237,10 @@ export default function BiometricLock() {
 
                     {status === 'IDLE' && (
                         <button
-                            onClick={startRound}
+                            onClick={handleInitiateOverride}
                             className="px-12 py-6 text-2xl font-bold border-2 border-neon-cyan hover:bg-neon-cyan hover:text-black transition-all shadow-[0_0_20px_rgba(0,255,255,0.3)] animate-pulse"
                         >
-                            INITIATE OVERRIDE
+                            INITIATE NEURAL SYNC
                         </button>
                     )}
 
@@ -205,6 +272,13 @@ export default function BiometricLock() {
                                             }`}></div>
                                     )
                                 })}
+                            </div>
+
+                            {/* Instruction Text */}
+                            <div className="text-center animate-pulse mt-8">
+                                <p className="text-neon-cyan/80 text-lg uppercase tracking-widest border border-neon-cyan/30 px-6 py-2 rounded bg-black/40">
+                                    Show Hand & Say <span className="font-bold text-white">"CALIBRATE"</span> / <span className="font-bold text-white">"SCAN"</span>
+                                </p>
                             </div>
                         </>
                     )}
