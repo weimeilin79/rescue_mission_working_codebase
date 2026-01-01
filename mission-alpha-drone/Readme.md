@@ -8,13 +8,14 @@
 You have located 5 survivors trapped in a sector inaccessible to your main ship. You have a fleet of **Autonomous Rescue Drones**, but the solar storm that crashed your ship also reset the drone fleet's control system. They are currently unresponsive.
 
 **The Solution**:
-To launch the fleet, you must build an AI Agent to establish a **Biometric Neural Sync** (similar to a "Drift" in *Pacific Rim*). This will allow you to bypass the damaged circuits and control the drones manually via your own biological inputs.
+To launch the fleet, you must build an AI Agent to establish a **Biometric Neural Sync**. This will allow you to bypass the damaged circuits and control the drones manually via your own biological inputs.
 
 **The Rescue Mission**:
 You must perform the synchronization protocol to lock in the neural link.
 -   **The Protocol**: Stand in front of the optical sensors and complete the finger sequences (1 to 5).
 -   **The Outcome**: If successful, the **"Biometric Sync"** engages, giving you full manual control to launch the fleet and retrieve the survivors.
 
+![Mission Alpha](img/mission_alpha.gif)
 ---
 
 ## 🏗️ Architecture Overview
