@@ -21,12 +21,12 @@ Traditional rescue methods are impossible due to the magnetic interference. We h
 *   **Tech Stack**: **Google ADK for Live API**, React, WebSockets, **Google Gemini(Multimodal Agent)**.
 *   **Key Mechanic**: A multimodal AI agent visually scans your hand gestures (1-5 fingers) to perform a "Neural Handshake" and unlock the system.
 
-### 🛠️ 2. [Mission Bravo: Live API & Multi-agent system](mission-bravo-engineer/)
+### 🛠️ 2. [Mission Bravo: The Architect](mission-bravo-engineer/)
 **"The Swarm Intelligence"**
-*   **Objective**: Repair the infrastructure and coordinate the logic.
-*   **Challenge**: The backend systems are fragmented. We need an intelligent agent to write code, fix bugs, and optimize the drone paths.
-*   **Tech Stack**: **Google ADK for Live API**, **Agent2Agent Protocol**, Python, WebSockets,**Google Gemini(Multimodal Screen & Audio)**, Agent as Tool .
-*   **Key Mechanic**: An autonomous coding agent that can read the repository, plan changes, and execute fixes to the mission codebase.
+*   **Objective**: Manually assemble a replacement Warp Drive on a volatile workbench.
+*   **Challenge**: The ship's sensors are corrupted, and "Alien Tech" parts are unverified. Labels are unreliable holograms.
+*   **Tech Stack**: **Google ADK for Live API**, **Agent2Agent Protocol**, Python, WebSockets, **Google Gemini (Multimodal)**.
+*   **Key Mechanic**: A "Visual-Skeptical" Agent Swarm (Dispatch, Architect, Safety) that helps you verify parts and dispose of radioactive hazards using voice and visual checks.
 
 ### 📡 3. [Mission Charlie: Event Driven Architecture](mission-charlie-eda/)
 **"The Event Horizon"**
